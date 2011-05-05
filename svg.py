@@ -30,35 +30,85 @@ def create_element(data, conf):
 
 class Font(object):
   def __init__(self, conf):
-    self.size = int(conf["size"])
-    self.family = conf["name"]
+    self.size = int(conf.size)
+    self.family = conf.name
 
-    if conf["typeface"].find("italic") != -1:
+    if conf.typeface.find("italic") != -1:
       self.style = "italic"
     else:
       self.style = "normal"
 
-    if conf["typeface"].find("bold") != -1:
+    if conf.typeface.find("bold") != -1:
       self.weight = "bold"
     else:
       self.weigth = "normal"
 
-class Bunch:
+class Bunch(object):
   def __init__(self, **kwds):
-    self.__dict__.update(kwds)
+    for key in kwds:
+      if isinstance(kwds[key], dict):
+        self.__dict__[key] = Bunch(**kwds[key])
+      else:
+        self.__dict__[key] = kwds[key]
+
+  def merge(self, data):
+    for key in data.__dict__:
+      if (key in self.__dict__) and isinstance(self.__dict__[key], Bunch):
+        self.__dict__[key].merge(data.__dict__[key])
+      else:
+        self.__dict__[key] = data.__dict__[key]
+
+  def copy(self):
+    new_bunch = Bunch()
+    for key in self.__dict__:
+      if isinstance(self.__dict__[key], Bunch):
+        new_bunch.__dict__[key] = self.__dict__[key].copy()
+      else:
+        new_bunch.__dict__[key] = self.__dict__[key]
+    return new_bunch
+
+def convert(data):
+  if isinstance(data, unicode):
+    return str(data)
+  elif isinstance(data, dict):
+    return dict(map(convert, data.iteritems()))
+  elif isinstance(data, (list, tuple, set, frozenset)):
+    return type(data)(map(convert, data))
+  else:
+    return data
 
 class Configuration(object):
   def __init__(self, conf):
-    self.default = Bunch(thickness = 1, padding = 10, font = Font(conf["default"]["font"]))
-    name = Bunch(padding = 10, font = Font(conf["default"]["name"]["font"]))
-    self.group = Bunch(padding = 10, name = name)
-    self.terminal = Bunch(padding = 10, font = self.default.font)
-    self.nonterminal = Bunch(padding = 10, font = Font(conf["nonterminal"]["font"]))
+    conf = convert(conf)
+    self.default = Bunch(thickness = 1, padding = 10, font = Bunch(name = "Courier", size = 16, typeface = "bold"))
+    if "default" in conf:
+      self.default.merge(Bunch(**conf["default"]))
+
+    self.group = self.default.copy()
+    if "group" in conf:
+      self.group.merge(Bunch(**conf["group"]))
+
+    self.terminal = self.default.copy()
+    if "terminal" in conf:
+      self.terminal.merge(Bunch(**conf["terminal"]))
+
+    self.nonterminal = self.default.copy()
+    self.nonterminal.font = Bunch(name = "Times", size = "16", typeface = "bold italic")
+    if "nonterminal" in conf:
+      self.nonterminal.merge(Bunch(**conf["nonterminal"]))
+
+    self.invterminal = self.default.copy()
+    if "invterminal" in conf:
+      self.invterminal.merge(Bunch(**conf["invterminal"]))
+
+    self.connection = Bunch(thickness = 1, marker = "normal")
+    if "connection" in conf:
+      self.connection.merge(Bunch(**conf["connection"]))
 
 class Text(object):
   def __init__(self, content, font, color = 'black'):
     self.content = content
-    self.font = font
+    self.font = Font(font)
     self.color = color
     self.width = len(content) * 8
     self.height = font.size * 3 / 4
@@ -170,7 +220,7 @@ class Group(object):
 
 class InvTerminal(object):
   def __init__(self, data, conf):
-    self.padding = 10
+    self.padding = conf.invterminal.padding
     self.children = []
     self.width = 0
     self.height = 0
@@ -201,6 +251,7 @@ class Alternation(object):
   def __init__(self, data, conf):
     print "test"
 
+# TODO small, normal, big
 class arrow(g):
   def __init__(self):
     BaseElement.__init__(self, 'marker')
@@ -225,7 +276,7 @@ def create_diagram(data, output, conf):
 
   diagram.render(s, 0, 0)
 
-  print s.getXML()
+  # print s.getXML()
   s.save(output)
 
 def main():
