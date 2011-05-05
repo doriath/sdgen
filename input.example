@@ -4,6 +4,13 @@
     {
       "children":
       [
+        {"value": "wwwww", "view": "Terminal"}
+      ],
+      "view": "Loop"
+    },
+    {
+      "children":
+      [
 	{"value": "wwwww", "view": "Terminal"},
 	{"value": "i", "view": "Terminal"}
       ],
@@ -25,6 +32,7 @@
 	{"value": "8", "view": "Terminal"},
 	{"value": "9", "view": "Terminal"}
       ],
+      "cardinality": "3",
       "name": "None",
       "view": "Group"
     },
@@ -66,7 +74,7 @@
               ],
               "bottom_children":
               [
-                {"value": "i", "view": "Terminal"}
+                {"value": "i", "view": "Terminal", "cardinality": "5..10"}
               ],
               "name": "None",
               "view": "Alternation"
