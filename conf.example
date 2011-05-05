@@ -1,0 +1,30 @@
+{
+  "default": {
+    "thickness": 1,
+    "padding": 10,
+    "font" : {
+      "name": "Courier",
+      "size": 16,
+      "typeface": "bold"
+    },
+    "name": {
+      "padding": 10,
+      "font": {
+        "name": "Times",
+        "size": 16,
+        "typeface": "bold italic"
+      }
+    }
+  },
+  "nonterminal": {
+    "font": {
+      "name": "Times",
+      "size": 16,
+      "typeface": "bold italic"
+    }
+  },
+  "connection": {
+    "thickenss": 1,
+    "marker": "normal"
+  }
+}

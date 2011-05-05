@@ -1,0 +1,30 @@
+{
+  "children":
+  [
+    {"type": "Number", "value": "97", "view": "Terminal"},
+    {
+      "children":
+      [
+	{"type": "Character", "value": "8", "view": "Terminal"},
+	{"type": "Character", "value": "9", "view": "Terminal"}
+      ],
+      "type": "CharacterClass",
+      "name": "None",
+      "view": "InvTerminal"
+    },
+    {"type": "Number", "value": "98", "view": "Terminal"},
+    {
+      "children":
+      [
+	{"type": "Character", "value": "-", "view": "Terminal"},
+	{"type": "Character", "value": " ", "view": "Terminal"}
+      ],
+      "type": "Concat",
+      "name": "Separator",
+      "view": "Non Terminal"
+    }
+  ],
+  "type": "Concat",
+  "name": "Grupa poczatkowa",
+  "view": "Group"
+}
