@@ -17,17 +17,6 @@ def as_svg(data, path = None, conf = None):
   '''
   print 'test'
 
-def create_element(data, conf):
-  if data["view"] == "Group":
-    return Group(data, conf)
-  if data["view"] == "Terminal":
-    return Terminal(data, conf)
-  if data["view"] == "InvTerminal":
-    return InvTerminal(data, conf)
-  if data["view"] == "Non Terminal":
-    return NonTerminal(data, conf)
-  raise "Unknow view"
-
 class Font(object):
   def __init__(self, conf):
     self.size = int(conf.size)
@@ -110,7 +99,7 @@ class Text(object):
     self.content = content
     self.font = Font(font)
     self.color = color
-    self.width = len(content) * 8
+    self.width = len(content) * 10
     self.height = font.size * 3 / 4
 
   def render(self, svg, x, y):
@@ -122,118 +111,83 @@ class Text(object):
     t.set_fill(self.color)
     svg.addElement(t)
 
-class Terminal(object):
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def create_element(data, conf):
+  if data["view"] == "Group":
+    return Group(data, conf)
+  if data["view"] == "Terminal":
+    return Terminal(data, conf)
+  if data["view"] == "InvTerminal":
+    return InvTerminal(data, conf)
+  if data["view"] == "Non Terminal":
+    return NonTerminal(data, conf)
+  if data["view"] == "Alternation":
+    return Alternation(data, conf)
+  raise "Unknow view"
+
+class SimpleArrows(object):
   def __init__(self, data, conf):
-    self.text = Text(data["value"], conf.terminal.font)
-    self.padding = conf.terminal.padding
-    self.width = self.text.width + 2 * self.padding
-    self.height = self.text.height + 2 * self.padding
+    self.width = self.content_width + 20
+    self.height = self.content_height
 
   def render(self, svg, x, y):
-    shape_builder = ShapeBuilder()
-    frame = shape_builder.createRect(x, y, self.width, self.height, self.height / 2 - 1, self.height / 2 - 1)
-    svg.addElement(frame)
-
-    self.text.render(svg, x + self.padding, y + self.padding)
-
-class NonTerminal(object):
-  def __init__(self, data, conf):
-    self.text = Text(data["name"], conf.nonterminal.font)
-    self.padding = conf.nonterminal.padding
-    self.data = data
-    self.conf = conf
-    self.width = self.text.width + 2 * self.padding
-    self.height = self.text.height + 2 * self.padding
-
-  def render(self, svg, x, y):
-    shape_builder = ShapeBuilder()
-    frame = shape_builder.createRect(x, y, self.width, self.height)
-    svg.addElement(frame)
-
-    self.text.render(svg, x + self.padding, y + self.padding)
-
-    create_diagram(self.data, self.text.content + '.svg', self.conf)
-
-class Group(object):
-  def __init__(self, data, conf):
-    # create content and calulcate size
-    self.conf = conf
-    self.header_padding = conf.group.name.padding
-    self.padding = conf.group.padding
-
-    self.content_width = 0
-    self.content_height = 0
-    self.line_length = 20
-    self.arrow_length = 9
-
-    self.children = []
-    for child in data["children"]:
-      c = create_element(child, conf)
-      self.children.append(c)
-      self.content_width += self.line_length + c.width
-      self.content_height = max(self.content_height, c.height)
-    self.content_width += self.line_length + 2 * self.padding
-    self.content_height += 2 * self.padding
-
-    # create header
-    self.header_text = Text(data["name"], conf.group.name.font, 'white')
-    self.header_width = self.header_text.width + 2 * self.padding
-    self.header_height = self.header_text.height + 2 * self.padding
-
-    self.width = max(self.content_width, self.header_width)
-    self.height = self.content_height + self.header_height
-
-  def render(self, svg, x, y):
-    self.render_frame(svg, x, y)
-    self.render_content(svg, x, y + self.header_height)
-
-  def render_frame(self, svg, x, y):
-    shape_builder = ShapeBuilder()
-    frame = shape_builder.createRect(x, y, self.width, self.height)
-    svg.addElement(frame)
-
-    header_box = shape_builder.createRect(x, y, self.header_width, self.header_height, fill = 'black')
-    svg.addElement(header_box)
-
-    self.header_text.render(svg, x + self.header_padding, y + self.header_padding)
-
-  def render_content(self, svg, x, y):
-    x += self.padding
-    y += self.padding
+    self.render_content(svg, x + 10, y)
     shape_builder = ShapeBuilder()
 
-    max_height = 0
-    for child in self.children:
-      max_height = max(max_height, child.height)
-
-    for child in self.children:
-      child_y = y + (max_height - child.height) / 2
-      l = shape_builder.createLine(x, child_y + child.height / 2, x + self.line_length - self.arrow_length, child_y + child.height / 2, strokewidth = 3)
-      l._attributes['marker-end'] = 'url(#right-arrow)'
-      svg.addElement(l)
-
-      child.render(svg, x + self.line_length, child_y)
-      x += child.width + self.line_length
-    l = shape_builder.createLine(x, child_y + child.height / 2, x + self.line_length - self.arrow_length, child_y + child.height / 2, strokewidth = 3)
+    l = shape_builder.createLine(x, y + self.content_height / 2, x + 10 - 9, y + self.content_height / 2, strokewidth = 3)
     l._attributes['marker-end'] = 'url(#right-arrow)'
     svg.addElement(l)
 
-class InvTerminal(object):
+    l = shape_builder.createLine(x + self.content_width + 10, y + self.content_height / 2, x + self.content_width + 20, y + self.content_height / 2, strokewidth = 3)
+    svg.addElement(l)
+
+class Terminal(SimpleArrows):
+  def __init__(self, data, conf):
+    self.text = Text(data["value"], conf.terminal.font)
+    self.padding = conf.terminal.padding
+    self.content_width = self.text.width + 2 * self.padding
+    self.content_height = self.text.height + 2 * self.padding
+    SimpleArrows.__init__(self, data, conf)
+
+  def render_content(self, svg, x, y):
+    shape_builder = ShapeBuilder()
+    frame = shape_builder.createRect(x, y, self.content_width, self.content_height, self.content_height / 2 - 1, self.content_height / 2 - 1)
+    svg.addElement(frame)
+
+    self.text.render(svg, x + self.padding, y + self.padding)
+
+class InvTerminal(SimpleArrows):
   def __init__(self, data, conf):
     self.padding = conf.invterminal.padding
     self.children = []
-    self.width = 0
-    self.height = 0
+    self.content_width = self.content_height = 0
     for raw_child in data['children']:
-      child = create_element(raw_child, conf)
-      child.text.color = 'white'
-      self.width += child.width
-      self.height = max(self.height, child.height)
+      child = Text(raw_child["value"], conf.nonterminal.font)
+      child.color = 'white'
+      self.content_width += child.width + 2 * self.padding
+      self.content_height = max(self.content_height, child.height)
       self.children.append(child)
+    self.content_height += 2 * self.padding
+    SimpleArrows.__init__(self, data, conf)
 
-  def render(self, svg, x, y):
+  def render_content(self, svg, x, y):
     shape_builder = ShapeBuilder()
-    frame = shape_builder.createRect(x, y, self.width, self.height, self.height / 2 - 1, self.height / 2 - 1, fill = 'black')
+    frame = shape_builder.createRect(x, y, self.content_width, self.content_height, self.content_height / 2 - 1, self.content_height / 2 - 1, fill = 'black')
     svg.addElement(frame)
 
     first = True
@@ -241,15 +195,138 @@ class InvTerminal(object):
       if first:
         first = False
       else:
-        l = shape_builder.createLine(x, y + 3, x, y + child.height - 3, stroke = 'white', strokewidth = 2)
+        l = shape_builder.createLine(x, y + 3, x, y + self.content_height - 3, stroke = 'white', strokewidth = 2)
         svg.addElement(l)
 
-      child.text.render(svg, x + self.padding, y + self.padding)
+      child.render(svg, x + self.padding, y + self.padding)
+      x += child.width + 2 * self.padding
+
+class NonTerminal(SimpleArrows):
+  def __init__(self, data, conf):
+    self.text = Text(data["name"], conf.nonterminal.font)
+    self.padding = conf.nonterminal.padding
+    self.data = data
+    self.conf = conf
+    self.content_width = self.text.width + 2 * self.padding
+    self.content_height = self.text.height + 2 * self.padding
+    SimpleArrows.__init__(self, data, conf)
+
+  def render_content(self, svg, x, y):
+    shape_builder = ShapeBuilder()
+    frame = shape_builder.createRect(x, y, self.content_width, self.content_height)
+    svg.addElement(frame)
+
+    self.text.render(svg, x + self.padding, y + self.padding)
+
+    create_diagram(self.data, self.text.content + '.svg', self.conf)
+
+class GroupBody(object):
+  def __init__(self, data, conf):
+    self.children = []
+    self.padding = conf.group.padding
+    self.width = self.height = 0
+    self.content_width = 0
+    for raw_child in data["children"]:
+      child = create_element(raw_child, conf)
+      self.children.append(child)
+      self.content_width += child.width
+      self.height = max(self.height, child.height)
+    self.width = self.content_width + 2 * self.padding + 20
+    self.height += 2 * self.padding
+
+  def render(self, svg, x, y):
+    x += self.padding
+
+    # draw arrows
+    shape_builder = ShapeBuilder()
+    l = shape_builder.createLine(x, y + self.height / 2, x + 10, y + self.height / 2, strokewidth = 3)
+    svg.addElement(l)
+    l = shape_builder.createLine(x + self.content_width + 10, y + self.height / 2, x + self.content_width + 11, y + self.height / 2, strokewidth = 3)
+    l._attributes['marker-end'] = 'url(#right-arrow)'
+    svg.addElement(l)
+
+    # draw children
+    x += 10
+    y += self.padding
+    max_height = 0
+    for child in self.children:
+      max_height = max(max_height, child.height)
+
+    for child in self.children:
+      child_y = y + (max_height - child.height) / 2
+      child.render(svg, x, child_y)
       x += child.width
+
+
+class Group(SimpleArrows):
+  def __init__(self, data, conf):
+    # create content and calulcate size
+    self.conf = conf
+    self.header_padding = conf.group.name.padding
+    self.padding = conf.group.padding
+
+    self.body = GroupBody(data, conf)
+
+    self.content_width = 0
+    self.content_height = 0
+
+    # create header
+    self.header_text = Text(data["name"], conf.group.name.font, 'white')
+    self.header_width = self.header_text.width + 2 * self.padding
+    self.header_height = self.header_text.height + 2 * self.padding
+
+    self.content_width = max(self.body.width, self.header_width)
+    self.content_height = self.body.height + self.header_height
+    SimpleArrows.__init__(self, data, conf)
+
+  def render_content(self, svg, x, y):
+    self.render_frame(svg, x, y)
+    self.body.render(svg, x, y + self.header_height)
+
+  def render_frame(self, svg, x, y):
+    shape_builder = ShapeBuilder()
+    frame = shape_builder.createRect(x, y, self.content_width, self.content_height)
+    svg.addElement(frame)
+
+    header_box = shape_builder.createRect(x, y, self.header_width, self.header_height, fill = 'black')
+    svg.addElement(header_box)
+
+    self.header_text.render(svg, x + self.header_padding, y + self.header_padding)
+
 
 class Alternation(object):
   def __init__(self, data, conf):
-    print "test"
+    self.padding = 10
+    self.width = 0
+    self.height = 0
+    self.content_width = 0
+    self.children = []
+    for raw_child in data['children']:
+      child = create_element(raw_child, conf)
+      self.content_width = max(self.content_width, child.width)
+      self.height += max(self.height, child.height) + self.padding
+      self.children.append(child)
+    self.width = self.content_width + 40
+
+  def render(self, svg, x, y):
+    shape_builder = ShapeBuilder()
+    start_x = x
+    start_y = y + self.height / 2
+    end_x = x + self.content_width + 20
+
+    x += 20
+    y += self.padding
+    for child in self.children:
+      child.render(svg, x, y)
+
+      l = shape_builder.createLine(x + child.width, y + child.height / 2, x + self.content_width, y + child.height / 2, strokewidth = 3)
+      svg.addElement(l)
+      path_data = "m {0},{1} c {2},0 0,{3} {2},{3}".format(start_x, start_y, 20, y + child.height / 2 - start_y)
+      svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width = 3))
+      path_data = "m {0},{1} c {2},0 0,{3} {2},{3}".format(end_x, y + child.height / 2, 20, start_y - (y + child.height / 2))
+      svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width = 3))
+
+      y += child.height + self.padding
 
 # TODO small, normal, big
 class arrow(g):
@@ -274,7 +351,7 @@ def create_diagram(data, output, conf):
   d.addElement(m)
   s.addElement(d)
 
-  diagram.render(s, 0, 0)
+  diagram.render_content(s, 0, 0)
 
   # print s.getXML()
   s.save(output)

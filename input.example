@@ -12,6 +12,16 @@
       "name": "None",
       "view": "InvTerminal"
     },
+    {
+      "children":
+      [
+	{"type": "Character", "value": "8", "view": "Terminal"},
+	{"type": "Character", "value": "9", "view": "Terminal"}
+      ],
+      "type": "CharacterClass",
+      "name": "None",
+      "view": "Group"
+    },
     {"type": "Number", "value": "98", "view": "Terminal"},
     {
       "children":
@@ -22,6 +32,16 @@
       "type": "Concat",
       "name": "Separator",
       "view": "Non Terminal"
+    },
+    {
+      "children":
+      [
+	{"type": "Character", "value": "wwwww", "view": "Terminal"},
+	{"type": "Character", "value": "i", "view": "Terminal"}
+      ],
+      "type": "CharacterClass",
+      "name": "None",
+      "view": "Alternation"
     }
   ],
   "type": "Concat",
