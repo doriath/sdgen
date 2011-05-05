@@ -1,6 +1,14 @@
 {
   "children":
   [
+    {
+      "children":
+      [
+	{"value": "wwwww", "view": "Terminal"},
+	{"value": "i", "view": "Terminal"}
+      ],
+      "view": "Detour"
+    },
     {"value": "97", "view": "Terminal"},
     {
       "children":
@@ -31,14 +39,8 @@
       "view": "Non Terminal"
     },
     {
-      "top_children":
+      "children":
       [
-	{"value": "wwwww", "view": "Terminal"},
-	{"value": "i", "view": "Terminal"}
-      ],
-      "bottom_children":
-      [
-	{"value": "i", "view": "Terminal"},
         {
           "top_children":
           [
@@ -47,14 +49,34 @@
           ],
           "bottom_children":
           [
-            {"value": "i", "view": "Terminal"}
+            {"value": "i", "view": "Terminal"},
+            {
+              "top_children":
+              [
+                {
+                  "children":
+                  [
+                    {"value": "wwwww", "view": "Terminal"},
+                    {"value": "i", "view": "Terminal"}
+                  ],
+                  "view": "Detour"
+                },
+                {"value": "wwwww", "view": "Terminal", "cardinality": "5.."},
+                {"value": "i", "view": "Terminal"}
+              ],
+              "bottom_children":
+              [
+                {"value": "i", "view": "Terminal"}
+              ],
+              "name": "None",
+              "view": "Alternation"
+            }
           ],
           "name": "None",
           "view": "Alternation"
         }
       ],
-      "name": "None",
-      "view": "Alternation"
+      "view": "Detour"
     }
   ],
   "name": "Grupa poczatkowa",

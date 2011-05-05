@@ -142,12 +142,15 @@ def create_element(data, conf):
     return NonTerminal(data, conf)
   if data["view"] == "Alternation":
     return Alternation(data, conf)
+  if data["view"] == "Detour":
+    return Detour(data, conf)
   raise "Unknow view"
 
 class SimpleArrows(object):
   def __init__(self, data, conf):
     self.width = self.content_width + 20
     self.height = self.content_height
+    self.connect_y = self.content_height / 2
 
   def render(self, svg, x, y):
     self.render_content(svg, x + 10, y)
@@ -226,17 +229,12 @@ class NonTerminal(SimpleArrows):
 
 class GroupBody(object):
   def __init__(self, data, conf):
-    self.children = []
     self.padding = conf.group.padding
-    self.width = self.height = 0
-    self.content_width = 0
-    for raw_child in data["children"]:
-      child = create_element(raw_child, conf)
-      self.children.append(child)
-      self.content_width += child.width
-      self.height = max(self.height, child.height)
+    self.content = LinearLayout(data["children"], conf)
+
+    self.content_width = self.content.width
     self.width = self.content_width + 2 * self.padding + 20
-    self.height += 2 * self.padding
+    self.height = self.content.height + 2 * self.padding
 
   def render(self, svg, x, y):
     x += self.padding
@@ -250,16 +248,7 @@ class GroupBody(object):
     svg.addElement(l)
 
     # draw children
-    x += 10
-    y += self.padding
-    max_height = 0
-    for child in self.children:
-      max_height = max(max_height, child.height)
-
-    for child in self.children:
-      child_y = y + (max_height - child.height) / 2
-      child.render(svg, x, child_y)
-      x += child.width
+    self.content.render(svg, x + 10, y + self.padding)
 
 
 class Group(SimpleArrows):
@@ -314,9 +303,9 @@ class LinearLayout(object):
     for child in self.children:
       max_height = max(max_height, child.height)
 
+    connect_y = y + max_height / 2
     for child in self.children:
-      child_y = y + (max_height - child.height) / 2
-      child.render(svg, x, child_y)
+      child.render(svg, x, connect_y - child.connect_y)
       x += child.width
 
 
@@ -329,6 +318,7 @@ class Alternation(object):
     self.height = self.top.height + self.bottom.height + self.padding
     self.content_width = max(self.top.width, self.bottom.width)
     self.width = self.content_width + 40
+    self.connect_y = self.height / 2
 
   def render(self, svg, x, y):
     shape_builder = ShapeBuilder()
@@ -348,6 +338,36 @@ class Alternation(object):
       svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width = 3))
 
       y += child.height + self.padding
+
+class Detour(object):
+  def __init__(self, data, conf):
+    self.content = LinearLayout(data["children"], conf)
+    self.width = self.content.width + 40
+    self.height = self.content.height + 20
+    self.connect_y = self.content.height / 2
+
+  def render(self, svg, x, y):
+    shape_builder = ShapeBuilder()
+    connect_y = y + self.connect_y
+    bottom_y = y + self.content.height + 10
+
+    self.content.render(svg, x + 20, y)
+
+    path_data = "m {0},{1} c 10,0 10,{3} {2},{3}".format(x, connect_y, 20, bottom_y - connect_y)
+    svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width = 3))
+    path_data = "m {0},{1} c 10,0 10,{3} {2},{3}".format(x + 20 + self.content.width, bottom_y, 20, connect_y - bottom_y)
+    svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width = 3))
+
+    l = shape_builder.createLine(x + 20 + self.content.width / 2, bottom_y, x + 20 + self.content.width / 2, bottom_y, strokewidth = 3)
+    l._attributes['marker-end'] = 'url(#right-arrow)'
+    svg.addElement(l)
+    l = shape_builder.createLine(x + 20, bottom_y, x + 20 + self.content.width, bottom_y, strokewidth = 3)
+    svg.addElement(l)
+    l = shape_builder.createLine(x, connect_y, x + 20, connect_y, strokewidth = 3)
+    svg.addElement(l)
+    l = shape_builder.createLine(x + 20 + self.content.width, connect_y, x + 20 + self.content.width + 20, connect_y, strokewidth = 3)
+    svg.addElement(l)
+
 
 # TODO small, normal, big
 class arrow(g):
