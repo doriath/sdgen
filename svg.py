@@ -90,6 +90,10 @@ class Configuration(object):
     if "invterminal" in conf:
       self.invterminal.merge(Bunch(**conf["invterminal"]))
 
+    self.alternation = self.default.copy()
+    if "alternation" in conf:
+      self.alternation.merge(Bunch(**conf["alternation"]))
+
     self.connection = Bunch(thickness = 1, marker = "normal")
     if "connection" in conf:
       self.connection.merge(Bunch(**conf["connection"]))
@@ -294,18 +298,36 @@ class Group(SimpleArrows):
     self.header_text.render(svg, x + self.header_padding, y + self.header_padding)
 
 
-class Alternation(object):
+class LinearLayout(object):
   def __init__(self, data, conf):
-    self.padding = 10
     self.width = 0
     self.height = 0
-    self.content_width = 0
     self.children = []
-    for raw_child in data['children']:
+    for raw_child in data:
       child = create_element(raw_child, conf)
-      self.content_width = max(self.content_width, child.width)
-      self.height += max(self.height, child.height) + self.padding
+      self.width += child.width
+      self.height = max(self.height, child.height)
       self.children.append(child)
+
+  def render(self, svg, x, y):
+    max_height = 0
+    for child in self.children:
+      max_height = max(max_height, child.height)
+
+    for child in self.children:
+      child_y = y + (max_height - child.height) / 2
+      child.render(svg, x, child_y)
+      x += child.width
+
+
+class Alternation(object):
+  def __init__(self, data, conf):
+    self.padding = conf.alternation.padding
+    self.top = LinearLayout(data['top_children'], conf)
+    self.bottom = LinearLayout(data['bottom_children'], conf)
+
+    self.height = self.top.height + self.bottom.height + self.padding
+    self.content_width = max(self.top.width, self.bottom.width)
     self.width = self.content_width + 40
 
   def render(self, svg, x, y):
@@ -315,8 +337,7 @@ class Alternation(object):
     end_x = x + self.content_width + 20
 
     x += 20
-    y += self.padding
-    for child in self.children:
+    for child in [self.top, self.bottom]:
       child.render(svg, x, y)
 
       l = shape_builder.createLine(x + child.width, y + child.height / 2, x + self.content_width, y + child.height / 2, strokewidth = 3)

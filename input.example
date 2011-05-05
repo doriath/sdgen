@@ -1,50 +1,62 @@
 {
   "children":
   [
-    {"type": "Number", "value": "97", "view": "Terminal"},
+    {"value": "97", "view": "Terminal"},
     {
       "children":
       [
-	{"type": "Character", "value": "8", "view": "Terminal"},
-	{"type": "Character", "value": "9", "view": "Terminal"}
+	{"value": "8", "view": "Terminal"},
+	{"value": "9", "view": "Terminal"}
       ],
-      "type": "CharacterClass",
       "name": "None",
       "view": "InvTerminal"
     },
     {
       "children":
       [
-	{"type": "Character", "value": "8", "view": "Terminal"},
-	{"type": "Character", "value": "9", "view": "Terminal"}
+	{"value": "8", "view": "Terminal"},
+	{"value": "9", "view": "Terminal"}
       ],
-      "type": "CharacterClass",
       "name": "None",
       "view": "Group"
     },
-    {"type": "Number", "value": "98", "view": "Terminal"},
+    {"value": "98", "view": "Terminal"},
     {
       "children":
       [
-	{"type": "Character", "value": "-", "view": "Terminal"},
-	{"type": "Character", "value": " ", "view": "Terminal"}
+	{"value": "-", "view": "Terminal"},
+	{"value": " ", "view": "Terminal"}
       ],
-      "type": "Concat",
       "name": "Separator",
       "view": "Non Terminal"
     },
     {
-      "children":
+      "top_children":
       [
-	{"type": "Character", "value": "wwwww", "view": "Terminal"},
-	{"type": "Character", "value": "i", "view": "Terminal"}
+	{"value": "wwwww", "view": "Terminal"},
+	{"value": "i", "view": "Terminal"}
       ],
-      "type": "CharacterClass",
+      "bottom_children":
+      [
+	{"value": "i", "view": "Terminal"},
+        {
+          "top_children":
+          [
+            {"value": "wwwww", "view": "Terminal"},
+            {"value": "i", "view": "Terminal"}
+          ],
+          "bottom_children":
+          [
+            {"value": "i", "view": "Terminal"}
+          ],
+          "name": "None",
+          "view": "Alternation"
+        }
+      ],
       "name": "None",
       "view": "Alternation"
     }
   ],
-  "type": "Concat",
   "name": "Grupa poczatkowa",
   "view": "Group"
 }
