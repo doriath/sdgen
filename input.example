@@ -4,7 +4,7 @@
     {
       "children":
       [
-        {"value": "wwwww", "view": "Terminal"}
+          {"value": "wwwąąww", "view": "Terminal"}
       ],
       "view": "Loop"
     },
