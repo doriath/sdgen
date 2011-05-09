@@ -83,12 +83,18 @@ data = {
                 {
                   "children":
                   [
-                    {"value": "wwwww", "view": "Terminal"}
+                    {
+                      "children":
+                      [
+                        {"value": "wwwww", "view": "Terminal"},
+                        {"value": "i", "view": "Terminal"}
+                      ],
+                      "view": "Sequence"
+                    }
                   ],
                   "value": "5..",
                   "view": "QuantityAbove"
                 },
-                {"value": "i", "view": "Terminal"}
               ],
               "bottom_children":
               [

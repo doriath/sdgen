@@ -19,6 +19,8 @@ def create_element(data, conf):
     return Return(data, conf)
   if data["view"] == "QuantityAbove":
     return QuantityAbove(data, conf)
+  if data["view"] == "Sequence":
+    return Sequence(data, conf)
   raise ValueError("Unknow view: " + data['view'])
 
 def create_diagram(data, conf):
@@ -128,7 +130,7 @@ class NonTerminal(SimpleArrows):
 class GroupBody(object):
   def __init__(self, data, conf):
     self.padding = conf.group.padding
-    self.content = LinearLayout(data["children"], conf)
+    self.content = Sequence(data["children"], conf)
 
     self.content_width = self.content.width
     self.width = self.content_width + 2 * self.padding + 20
@@ -184,13 +186,16 @@ class Group(SimpleArrows):
 
     self.header_text.render(svg, x + self.header_padding, y + self.header_padding)
 
-class LinearLayout(object):
+class Sequence(object):
   def __init__(self, data, conf):
     self.width = 0
     self.height_above = 0
     self.height_below = 0
     self.children = []
-    for raw_child in data:
+    raw_children = data
+    if isinstance(data, dict):
+      raw_children = data["children"]
+    for raw_child in raw_children:
       child = create_element(raw_child, conf)
       self.width += child.width
       self.height_above = max(self.height_above, child.connect_y)
@@ -212,8 +217,8 @@ class LinearLayout(object):
 class Alternation(object):
   def __init__(self, data, conf):
     self.padding = conf.alternation.padding
-    self.top = LinearLayout(data['top_children'], conf)
-    self.bottom = LinearLayout(data['bottom_children'], conf)
+    self.top = Sequence(data['top_children'], conf)
+    self.bottom = Sequence(data['bottom_children'], conf)
 
     self.height = self.top.height + self.bottom.height + self.padding
     self.content_width = max(self.top.width, self.bottom.width)
@@ -241,7 +246,7 @@ class Alternation(object):
 
 class Detour(object):
   def __init__(self, data, conf):
-    self.content = LinearLayout(data["children"], conf)
+    self.content = Sequence(data["children"], conf)
     self.width = self.content.width + 40
     self.height = self.content.height + 20
     self.connect_y = self.content.height / 2
@@ -270,7 +275,7 @@ class Detour(object):
 
 class Return(object):
   def __init__(self, data, conf):
-    self.content = LinearLayout(data["children"], conf)
+    self.content = Sequence(data["children"], conf)
     self.width = self.content.width + 40
     self.height = self.content.height + 20
     self.connect_y = self.content.connect_y + 20
