@@ -3,6 +3,10 @@ from pysvg.builders import *
 from sdgen.utils import *
 
 def create_element(data, conf):
+  if "view" in data:
+    pass
+  else:
+    print data
   if data["view"] == "Group":
     return Group(data, conf)
   if data["view"] == "Terminal":
@@ -217,8 +221,9 @@ class Sequence(object):
 class Alternation(object):
   def __init__(self, data, conf):
     self.padding = conf.alternation.padding
-    self.top = Sequence(data['top_children'], conf)
-    self.bottom = Sequence(data['bottom_children'], conf)
+    # TODO handle more children
+    self.top = create_element(data['children'][0], conf)
+    self.bottom = create_element(data['children'][1], conf)
 
     self.height = self.top.height + self.bottom.height + self.padding
     self.content_width = max(self.top.width, self.bottom.width)

@@ -61,54 +61,72 @@ data = {
       "children":
       [
         {
-          "top_children":
+          "children":
           [
-            {"value": "wwwww", "view": "Terminal"},
-            {"value": "i", "view": "Terminal"}
-          ],
-          "bottom_children":
-          [
-            {"value": "i", "view": "Terminal"},
             {
-              "top_children":
+              "children":
               [
-                {
-                  "children":
-                  [
-                    {"value": "wwwww", "view": "Terminal"},
-                    {"value": "i", "view": "Terminal"}
-                  ],
-                  "view": "Detour"
-                },
+                {"value": "wwwww", "view": "Terminal"},
+                {"value": "i", "view": "Terminal"}
+              ],
+              "view": "Sequence"
+            },
+            {
+              "children":
+              [
+                {"value": "i", "view": "Terminal"},
                 {
                   "children":
                   [
                     {
                       "children":
                       [
-                        {"value": "wwwww", "view": "Terminal"},
-                        {"value": "i", "view": "Terminal"}
+                        {
+                          "children":
+                          [
+                            {"value": "wwwww", "view": "Terminal"},
+                            {"value": "i", "view": "Terminal"}
+                          ],
+                          "view": "Detour"
+                        },
+                        {
+                          "children":
+                          [
+                            {
+                              "children":
+                              [
+                                {"value": "wwwww", "view": "Terminal"},
+                                {"value": "i", "view": "Terminal"}
+                              ],
+                              "view": "Sequence"
+                            }
+                          ],
+                          "value": "5..",
+                          "view": "QuantityAbove"
+                        },
+                      ],
+                      "view": "Sequence"
+                    },
+                    {
+                      "children":
+                      [
+                        {
+                          "children":
+                          [
+                            {"value": "i", "view": "Terminal"}
+                          ],
+                          "value": "5..10",
+                          "view": "QuantityAbove"
+                        }
                       ],
                       "view": "Sequence"
                     }
                   ],
-                  "value": "5..",
-                  "view": "QuantityAbove"
-                },
-              ],
-              "bottom_children":
-              [
-                {
-                  "children":
-                  [
-                    {"value": "i", "view": "Terminal"}
-                  ],
-                  "value": "5..10",
-                  "view": "QuantityAbove"
+                  "name": None,
+                  "view": "Alternation"
                 }
               ],
-              "name": None,
-              "view": "Alternation"
+              "view": "Sequence"
             }
           ],
           "name": None,
