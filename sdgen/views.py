@@ -3,10 +3,6 @@ from pysvg.builders import *
 from sdgen.utils import *
 
 def create_element(data, conf):
-  if "view" in data:
-    pass
-  else:
-    print data
   if data["view"] == "Group":
     return Group(data, conf)
   if data["view"] == "Terminal":
