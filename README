@@ -1,0 +1,25 @@
+Syntax Diagram Generator
+========================
+
+
+Installation
+------------
+
+python setup.py install
+
+Usage
+-----
+
+```
+import sdgen.svg
+data = {"value": "wwwww", "view": "Terminal"}
+print sdgen.svg.as_svg(data)
+```
+
+Authors
+-------
+
+Tomasz Zurkowski
+Piotr Slatala
+Marek Kuzora
+Anna Fenster

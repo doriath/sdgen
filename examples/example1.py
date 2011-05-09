@@ -1,10 +1,13 @@
-{
+# -*- coding: utf-8 -*-
+from sdgen.svg import *
+
+data = {
   "children":
   [
     {
       "children":
       [
-          {"value": "wwwąąww", "view": "Terminal"}
+          {"value": "wwwww", "view": "Terminal"}
       ],
       "view": "Loop"
     },
@@ -23,7 +26,7 @@
 	{"value": "8", "view": "Terminal"},
 	{"value": "9", "view": "Terminal"}
       ],
-      "name": "None",
+      "name": None,
       "view": "InvTerminal"
     },
     {
@@ -33,7 +36,7 @@
 	{"value": "9", "view": "Terminal"}
       ],
       "cardinality": "3",
-      "name": "None",
+      "name": "Separator",
       "view": "Group"
     },
     {"value": "98", "view": "Terminal"},
@@ -76,11 +79,11 @@
               [
                 {"value": "i", "view": "Terminal", "cardinality": "5..10"}
               ],
-              "name": "None",
+              "name": None,
               "view": "Alternation"
             }
           ],
-          "name": "None",
+          "name": None,
           "view": "Alternation"
         }
       ],
@@ -90,3 +93,6 @@
   "name": "Grupa poczatkowa",
   "view": "Group"
 }
+
+result = as_svg(data)
+print result
