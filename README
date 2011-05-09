@@ -5,14 +5,29 @@ Syntax Diagram Generator
 Installation
 ------------
 
-python setup.py install
+    python setup.py install
+
+Running examples
+----------------
+
+    python examples/example1.py
+    python examples/example2.py
 
 Usage
 -----
 
 ```
 import sdgen.svg
-data = {"value": "wwwww", "view": "Terminal"}
+data = {
+  "children": [
+    {"value": "0..255", "view": "Terminal"},
+    {"value": "0..255", "view": "Terminal"},
+    {"value": "0..255", "view": "Terminal"},
+    {"value": "0..255", "view": "Terminal"}
+  ],
+  "view": "Group",
+  "name": "IP address"
+}
 print sdgen.svg.as_svg(data)
 ```
 
