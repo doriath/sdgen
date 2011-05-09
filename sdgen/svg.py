@@ -11,7 +11,7 @@ from sdgen.utils import *
 from sdgen.views import *
 from sdgen.configuration import *
 
-def as_svg(data, path = None, conf = None):
+def as_svg(data, path=None, conf=None):
   '''
   Generate a svg image(s). This function can generate multiple images.
   @param data: input data

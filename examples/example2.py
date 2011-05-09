@@ -7,20 +7,18 @@ data = {
   'children':
   [
     {
-      'type': 'OptionQuantity',
       'children':
       [
         {
           'children':
           [
-            {'type': 'Number', 'value': '97', 'view': 'Terminal'},
+            {'value': '97', 'view': 'Terminal'},
             {
               'children':
               [
-                {'type': 'Character', 'value': '8', 'view': 'Terminal'},
-                {'type':'Character', 'value': '9', 'view': 'Terminal'}
+                {'value': '8', 'view': 'Terminal'},
+                {'value': '9', 'view': 'Terminal'}
               ],
-              'type':'CharacterClass',
               'name': None,
               'view': 'InvTerminal'
             },
@@ -30,43 +28,37 @@ data = {
                 {
                   'children':
                   [
-                    {'type': 'Character', 'value': '-', 'view': 'Terminal'},
-                    {'type': 'Character', 'value': ' ', 'view': 'Terminal'}
+                    {'value': '-', 'view': 'Terminal'},
+                    {'value': ' ', 'view': 'Terminal'}
                   ],
-                  'type': 'CharacterClass',
                   'name': None,
                   'view': 'InvTerminal'
                 }
               ],
-              'type': 'Concat',
-              'name': None,
-              'view': 'Non Terminal'
+              'name': "None",
+              'view': 'NonTerminal'
             }
           ],
-          'type': 'Concat',
-          'name': None,
+          'name': "None",
           'view': 'Group'
         }
       ],
-      'value': '0..1',
-      'view': 'quantity_detour'
+      'view': 'Detour'
     },
     {
-      'type': 'RangeQuantity',
       'children':
       [
         {
           'children':
           [
-            {'type': 'Range', 'value': '0..9', 'view': 'Terminal'}
+            {'value': '0..9', 'view': 'Terminal'}
           ],
-          'type': 'CharacterClass',
           'name': None,
           'view': 'InvTerminal'
         }
       ],
       'value': '1..5',
-      'view': 'quantity_above'
+      'view': 'QuantityAbove'
     },
     {
       'children':
@@ -77,31 +69,27 @@ data = {
             {'type': 'Character', 'value': '-', 'view': 'Terminal'},
             {'type': 'Character', 'value': ' ', 'view': 'Terminal'}
           ],
-          'type': 'CharacterClass',
           'name': None,
           'view': 'InvTerminal'
         }
       ],
-      'type': 'Concat',
-      'name': None,
-      'view': 'Non Terminal'
+      'name': "None",
+      'view': 'NonTerminal'
     },
     {
-      'type': 'RangeQuantity',
       'children':
       [
         {
           'children':
           [
-            {'type': 'Range', 'value': '0..9', 'view': 'Terminal'}
+            {'value': '0..9', 'view': 'Terminal'}
           ],
-          'type': 'CharacterClass',
           'name': None,
           'view': 'InvTerminal'
         }
       ],
       'value': '2..7',
-      'view': 'quantity_above'
+      'view': 'QuantityAbove'
     },
     {
       'children':
@@ -109,20 +97,17 @@ data = {
         {
           'children':
           [
-            {'type': 'Character', 'value': '-', 'view': 'Terminal'},
-            {'type': 'Character', 'value': ' ', 'view': 'Terminal'}
+            {'value': '-', 'view': 'Terminal'},
+            {'value': ' ', 'view': 'Terminal'}
           ],
-          'type': 'CharacterClass',
           'name': None,
           'view': 'InvTerminal'
         }
       ],
-      'type': 'Concat',
-      'name': None,
+      'name': "None",
       'view': 'NonTerminal'
     },
     {
-      'type': 'RangeQuantity',
       'children':
       [
         {
@@ -136,7 +121,7 @@ data = {
         }
       ],
       'value': '1..6',
-      'view': 'quantity_above'
+      'view': 'QuantityAbove'
     },
     {
       'children':
@@ -144,30 +129,26 @@ data = {
         {
           'children':
           [
-            {'type': 'Character', 'value': '-', 'view': 'Terminal'},
-            {'type': 'Character', 'value': ' ', 'view': 'Terminal'}
+            {'value': '-', 'view': 'Terminal'},
+            {'value': ' ', 'view': 'Terminal'}
           ],
-          'type': 'CharacterClass',
           'name': None,
           'view': 'InvTerminal'
         }
       ],
-      'type': 'Concat',
-      'name': None,
+      'name': "None",
       'view': 'NonTerminal'
     },
     {
       'children':
       [
-        {'type': 'Range', 'value': '0..9', 'view': 'Terminal'},
-        {'type': 'Character', 'value': 'X', 'view': 'Terminal'}
+        {'value': '0..9', 'view': 'Terminal'},
+        {'value': 'X', 'view': 'Terminal'}
       ],
-      'type': 'CharacterClass',
       'name': None,
       'view': 'InvTerminal'
     }
   ],
-  'type': 'Concat',
   'name': "Main",
   'view': "Group"
 }

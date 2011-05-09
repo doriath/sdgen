@@ -3,29 +3,23 @@ from pysvg.builders import *
 from sdgen.utils import *
 
 def create_element(data, conf):
-  result = None
   if data["view"] == "Group":
-    result = Group(data, conf)
+    return Group(data, conf)
   if data["view"] == "Terminal":
-    result = Terminal(data, conf)
+    return Terminal(data, conf)
   if data["view"] == "InvTerminal":
-    result = InvTerminal(data, conf)
-  if data["view"] == "Non Terminal":
-    result = NonTerminal(data, conf)
+    return InvTerminal(data, conf)
+  if data["view"] == "NonTerminal":
+    return NonTerminal(data, conf)
   if data["view"] == "Alternation":
-    result = Alternation(data, conf)
+    return Alternation(data, conf)
   if data["view"] == "Detour":
-    result =  Detour(data, conf)
-  if data["view"] == "Loop":
-    result =  Loop(data, conf)
-
-  if result == None:
-    raise "Unknow view"
-
-  if "cardinality" in data:
-    return Cardinality(result, data, conf)
-
-  return result
+    return Detour(data, conf)
+  if data["view"] == "Return":
+    return Return(data, conf)
+  if data["view"] == "QuantityAbove":
+    return QuantityAbove(data, conf)
+  raise ValueError("Unknow view: " + data['view'])
 
 def create_diagram(data, conf):
   diagram = Group(data, conf)
@@ -36,14 +30,15 @@ def create_diagram(data, conf):
   diagram.render_content(s, 0, 0)
   return s.getXML()
 
-class Cardinality(object):
-  def __init__(self, content, data, conf):
+class QuantityAbove(object):
+  def __init__(self, data, conf):
+    assert len(data["children"]) == 1
     self.padding = conf.default.padding
-    self.content = content
-    self.text = Text(data["cardinality"], conf.default.font)
-    self.width = content.width
-    self.height = content.height + self.text.height + self.padding
-    self.connect_y = content.connect_y + self.text.height + self.padding
+    self.content = create_element(data["children"][0], conf)
+    self.text = Text(data["value"], conf.default.font)
+    self.width = self.content.width
+    self.height = self.content.height + self.text.height + self.padding
+    self.connect_y = self.content.connect_y + self.text.height + self.padding
 
   def render(self, svg, x, y):
     self.text.render(svg, x + self.content.width / 2 - self.text.width / 2, y)
@@ -273,7 +268,7 @@ class Detour(object):
     l = shape_builder.createLine(x + 20 + self.content.width, connect_y, x + 20 + self.content.width + 20, connect_y, strokewidth = 3)
     svg.addElement(l)
 
-class Loop(object):
+class Return(object):
   def __init__(self, data, conf):
     self.content = LinearLayout(data["children"], conf)
     self.width = self.content.width + 40

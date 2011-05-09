@@ -1,0 +1,10 @@
+Questions:
+- Example from email:
+  - what if view == None
+  - what if name == None (in view == Group or view == NonTerminal)
+
+- as_svg (what should it return?)
+
+- naming
+  - quantity_detour -> Detour
+  - quantity_return -> Return
