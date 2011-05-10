@@ -154,4 +154,4 @@ data = {
 }
 
 result = as_svg(data)
-print result
+print result[1].encode('utf-8')

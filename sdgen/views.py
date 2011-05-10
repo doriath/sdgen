@@ -30,7 +30,7 @@ def create_diagram(data, conf):
   d.addElement(arrow())
   s.addElement(d)
   diagram.render_content(s, 0, 0)
-  return s.getXML()
+  return (data["name"], s.getXML())
 
 class QuantityAbove(object):
   def __init__(self, data, conf):

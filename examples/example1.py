@@ -141,4 +141,4 @@ data = {
 }
 
 result = as_svg(data)
-print result.encode('utf-8')
+print result[1].encode('utf-8')

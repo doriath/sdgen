@@ -3,7 +3,7 @@ Questions:
   - what if view == None
   - what if name == None (in view == Group or view == NonTerminal)
 
-- as_svg (what should it return?)
+- as_svg - what is out path? is it directory
 
 - naming
   - quantity_detour -> Detour
