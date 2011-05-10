@@ -9,7 +9,7 @@ data = {
     {
       "children":
       [
-          {"value": "wwwww", "view": "Terminal"}
+          {"value": "w w", "view": "Terminal"}
       ],
       "view": "Return"
     },
@@ -17,7 +17,7 @@ data = {
       "children":
       [
 	{"value": "wwwww", "view": "Terminal"},
-	{"value": "i", "view": "Terminal"}
+	{"value": " ", "view": "Terminal"}
       ],
       "view": "Detour"
     },
@@ -141,4 +141,4 @@ data = {
 }
 
 result = as_svg(data)
-print result
+print result.encode('utf-8')

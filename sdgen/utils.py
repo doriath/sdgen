@@ -22,9 +22,16 @@ class Text(object):
   def __init__(self, content, font, color = 'black'):
     self.content = content
     self.font = Font(font)
+
+    if self.content == " ":
+      self.content = "Spacja"
+      self.font.style = "italic"
+
+    self.content = self.content.replace(" ", u'\u02FD')
+
     self.color = color
-    self.width = len(content) * 10
-    self.height = font.size * 3 / 4
+    self.width = len(self.content) * 10
+    self.height = self.font.size * 3 / 4
 
   def render(self, svg, x, y):
     t = text(self.content, x, y + self.height)
