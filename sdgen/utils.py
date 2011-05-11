@@ -19,13 +19,14 @@ class Font(object):
       self.weigth = "normal"
 
 class Text(object):
-  def __init__(self, content, font, color = 'black'):
+  def __init__(self, content, font, color='black', raw=False):
     self.content = content
     self.font = Font(font)
 
     if self.content == " ":
-      self.content = "Spacja"
+      self.content = "spacja"
       self.font.style = "italic"
+      self.font.family = "Times"
 
     self.content = self.content.replace(" ", u'\u02FD')
 

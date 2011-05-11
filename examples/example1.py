@@ -25,8 +25,8 @@ data = {
     {
       "children":
       [
-	{"value": "8", "view": "Terminal"},
-	{"value": "9", "view": "Terminal"}
+	{"value": ".", "view": "Terminal"},
+	{"value": "tomek", "view": "Terminal"}
       ],
       "name": None,
       "view": "InvTerminal"
@@ -72,6 +72,10 @@ data = {
               "view": "Sequence"
             },
             {
+              "value": "tomek",
+              "view": "Terminal"
+            },
+            {
               "children":
               [
                 {"value": "i", "view": "Terminal"},
@@ -84,7 +88,7 @@ data = {
                         {
                           "children":
                           [
-                            {"value": "wwwww", "view": "Terminal"},
+                            {"value": u"wwąww", "view": "Terminal"},
                             {"value": "i", "view": "Terminal"}
                           ],
                           "view": "Detour"
@@ -136,7 +140,7 @@ data = {
       "view": "Detour"
     }
   ],
-  "name": "Grupa poczatkowa",
+  "name": u"Grupa początkowa",
   "view": "Group"
 }
 

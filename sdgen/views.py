@@ -84,7 +84,7 @@ class InvTerminal(SimpleArrows):
     self.children = []
     self.content_width = self.content_height = 0
     for raw_child in data['children']:
-      child = Text(raw_child["value"], conf.nonterminal.font)
+      child = Text(raw_child["value"], conf.invterminal.font)
       child.color = 'white'
       self.content_width += child.width + 2 * self.padding
       self.content_height = max(self.content_height, child.height)
@@ -218,11 +218,16 @@ class Alternation(object):
   def __init__(self, data, conf):
     self.padding = conf.alternation.padding
     # TODO handle more children
-    self.top = create_element(data['children'][0], conf)
-    self.bottom = create_element(data['children'][1], conf)
+    self.children = []
+    for raw_child in data['children']:
+      self.children.append(create_element(raw_child, conf))
 
-    self.height = self.top.height + self.bottom.height + self.padding
-    self.content_width = max(self.top.width, self.bottom.width)
+    self.height = 0
+    self.content_width = 0
+    for child in self.children:
+      self.height += child.height
+      self.content_width = max(self.content_width, child.width)
+    self.height += self.padding
     self.width = self.content_width + 40
     self.connect_y = self.height / 2
 
@@ -233,7 +238,7 @@ class Alternation(object):
     end_x = x + self.content_width + 20
 
     x += 20
-    for child in [self.top, self.bottom]:
+    for child in self.children:
       child.render(svg, x, y)
 
       l = shape_builder.createLine(x + child.width, y + child.connect_y, x + self.content_width, y + child.connect_y, strokewidth = 3)

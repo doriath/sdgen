@@ -21,7 +21,7 @@ def getXML(self):
         xml += u'</'+unicode(self._elementName) + u'>\n'
     return xml
 
-def wrap_xml(self, xml, encoding='ISO-8859-1', standalone='no'):
+def wrap_xml(self, xml, encoding='utf-8', standalone='no'):
     """
     Method that provides a standard svg header string for a file
     """
