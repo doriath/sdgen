@@ -35,16 +35,15 @@ def create_diagram(data, conf):
 class QuantityAbove(object):
   def __init__(self, data, conf):
     assert len(data["children"]) == 1
-    self.padding = conf.default.padding
     self.content = create_element(data["children"][0], conf)
     self.text = Text(data["value"], Font(conf.default.font))
     self.width = self.content.width
-    self.height = self.content.height + self.text.height + self.padding
-    self.connect_y = self.content.connect_y + self.text.height + self.padding
+    self.height = self.content.height + self.text.height
+    self.connect_y = self.content.connect_y + self.text.height
 
   def render(self, svg, x, y):
     self.text.render(svg, x + self.content.width / 2 - self.text.width / 2, y)
-    self.content.render(svg, x, y + self.text.height + self.padding)
+    self.content.render(svg, x, y + self.text.height)
 
 class SimpleArrows(object):
   def __init__(self, data, conf):
@@ -138,17 +137,11 @@ class GroupBody(object):
     self.height = self.content.height + 2 * self.padding
 
   def render(self, svg, x, y):
-    stroke_width = self.conf.connection.thickness
     x += self.padding
 
-    # draw arrows
-    shape_builder = ShapeBuilder()
     connect_y = y + self.padding + self.content.connect_y
-    l = shape_builder.createLine(x, connect_y, x + 10, connect_y, strokewidth=stroke_width)
-    svg.addElement(l)
-    l = shape_builder.createLine(x + self.content_width + 10, connect_y, x + self.content_width + 11, connect_y, strokewidth=stroke_width)
-    l._attributes['marker-end'] = 'url(#right-arrow)'
-    svg.addElement(l)
+    Line(10, 0, self.conf).render(svg, x, connect_y)
+    Line(10, 0, self.conf, arrow=True).render(svg, x + self.content_width + 10, connect_y)
 
     # draw children
     self.content.render(svg, x + 10, y + self.padding)
@@ -167,8 +160,8 @@ class Group(SimpleArrows):
 
     # create header
     self.header_text = Text(data["name"], Font(conf.group.name.font), 'white')
-    self.header_width = self.header_text.width + 2 * self.padding
-    self.header_height = self.header_text.height + 2 * self.padding
+    self.header_width = self.header_text.width + 2 * self.header_padding
+    self.header_height = self.header_text.height + 2 * self.header_padding
 
     self.content_width = max(self.body.width, self.header_width)
     self.content_height = self.body.height + self.header_height
