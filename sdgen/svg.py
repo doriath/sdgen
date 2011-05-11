@@ -3,6 +3,15 @@ from sdgen.fixes import *
 from sdgen.views import *
 from sdgen.configuration import *
 
+def find_non_terminals(data):
+  result = []
+  if data["view"] == "NonTerminal":
+    result.append(data)
+  if "children" in data:
+    for child in data["children"]:
+      result.extend(find_non_terminals(child))
+  return result
+
 def as_svg(data, path=None, conf=None):
   '''
   Generate a svg image(s). This function can generate multiple images.
@@ -12,4 +21,9 @@ def as_svg(data, path=None, conf=None):
   @param conf: configuration to substitute the default one
   @return: a list of tuples, each tuple contains two fields: a name and an image in svg format
   '''
-  return create_diagram(data, Configuration(conf))
+  views_to_render = [data]
+  views_to_render.extend(find_non_terminals(data))
+  result = []
+  for view in views_to_render:
+    result.append((view["name"], create_diagram(data, Configuration(conf))))
+  return result

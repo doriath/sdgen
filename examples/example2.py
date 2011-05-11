@@ -19,7 +19,6 @@ data = {
                 {'value': '8', 'view': 'Terminal'},
                 {'value': '9', 'view': 'Terminal'}
               ],
-              'name': None,
               'view': 'InvTerminal'
             },
             {
@@ -31,15 +30,14 @@ data = {
                     {'value': '-', 'view': 'Terminal'},
                     {'value': ' ', 'view': 'Terminal'}
                   ],
-                  'name': None,
                   'view': 'InvTerminal'
                 }
               ],
-              'name': "None",
+              'name': "Separator",
               'view': 'NonTerminal'
             }
           ],
-          'name': "None",
+          'name': u"Grupa początkowa",
           'view': 'Group'
         }
       ],
@@ -53,7 +51,6 @@ data = {
           [
             {'value': '0..9', 'view': 'Terminal'}
           ],
-          'name': None,
           'view': 'InvTerminal'
         }
       ],
@@ -69,11 +66,10 @@ data = {
             {'type': 'Character', 'value': '-', 'view': 'Terminal'},
             {'type': 'Character', 'value': ' ', 'view': 'Terminal'}
           ],
-          'name': None,
           'view': 'InvTerminal'
         }
       ],
-      'name': "None",
+      'name': "Separator",
       'view': 'NonTerminal'
     },
     {
@@ -104,7 +100,7 @@ data = {
           'view': 'InvTerminal'
         }
       ],
-      'name': "None",
+      'name': "Separator",
       'view': 'NonTerminal'
     },
     {
@@ -136,7 +132,7 @@ data = {
           'view': 'InvTerminal'
         }
       ],
-      'name': "None",
+      'name': "Separator",
       'view': 'NonTerminal'
     },
     {
@@ -149,9 +145,9 @@ data = {
       'view': 'InvTerminal'
     }
   ],
-  'name': "Main",
+  'name': u"Identyfikator publikacji",
   'view': "Group"
 }
 
 result = as_svg(data)
-print result[1].encode('utf-8')
+print result[0][1].encode('utf-8')

@@ -28,7 +28,6 @@ data = {
 	{"value": ".", "view": "Terminal"},
 	{"value": "tomek", "view": "Terminal"}
       ],
-      "name": None,
       "view": "InvTerminal"
     },
     {
@@ -144,4 +143,4 @@ data = {
 }
 
 result = as_svg(data)
-print result[1].encode('utf-8')
+print result[0][1].encode('utf-8')
