@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from sdgen.fixes import *
 from sdgen.views import *
 from sdgen.configuration import *
@@ -26,4 +27,13 @@ def as_svg(data, path=None, conf=None):
   result = []
   for view in views_to_render:
     result.append((view["name"], create_diagram(data, Configuration(conf))))
+
+  if path != None:
+    for image in result:
+      file_name = os.path.join(path, image[0] + ".svg")
+      if os.path.exists(file_name):
+        raise Exception, "File already exists!"
+      with open(file_name, 'w') as f:
+        f.write(image[1].encode('utf-8'))
+
   return result
