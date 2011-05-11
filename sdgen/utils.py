@@ -1,7 +1,13 @@
 # -*- coding: utf-8 -*-
+from pysvg.builders import *
 from pysvg.structure import *
 from pysvg.text import *
 from pysvg.shape import *
+import Tkinter as tk
+import tkFont
+
+# required for calculating size of the text
+tk.Tk()
 
 class Font(object):
   def __init__(self, conf):
@@ -31,10 +37,20 @@ class Text(object):
       self.content = self.content.replace(" ", u'\u02FD')
 
     self.color = color
-    self.width = len(self.content) * 10
-    self.height = self.font.size * 3 / 4
+    (self.width, self.height) = self.calculateTextSize(self.content, self.font.family, self.font.size, self.font.weight, self.font.style)
+
+  def calculateTextSize(self, content, family, size, weight, style):
+    if style == 'normal':
+      style = 'roman'
+    font = tkFont.Font(family=family, size = size, weight = weight, slant = style)
+    (w,h) = (font.measure(content),font.metrics("linespace"))
+    return (w,h/2)
 
   def render(self, svg, x, y):
+    shape_builder = ShapeBuilder()
+    frame = shape_builder.createRect(x, y, self.width, self.height)
+    svg.addElement(frame)
+
     t = text(self.content, x, y + self.height)
     t.set_font_size(self.font.size)
     t.set_font_family(self.font.family)
