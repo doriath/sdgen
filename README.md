@@ -11,8 +11,8 @@ Getting started
 
 First, execute some examples:
 
-    python examples/example1.py > out.svg
-    python examples/example2.py > out.svg
+    python examples/http.py > http.svg
+    python examples/isbn.py > isbn.svg
 
 Then, generate simple diagram for IP grammar:
 
