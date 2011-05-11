@@ -22,42 +22,57 @@ class Font(object):
     if conf.typeface.find("bold") != -1:
       self.weight = "bold"
     else:
-      self.weigth = "normal"
+      self.weight = "normal"
 
 class Text(object):
-  def __init__(self, content, font, color='black', raw=False):
+  def __init__(self, content, font, color='black'):
     self.content = content
-    self.font = Font(font)
-
-    if not raw:
-      if self.content == " ":
-        self.content = "spacja"
-        self.font.style = "italic"
-        self.font.family = "Times"
-      self.content = self.content.replace(" ", u'\u02FD')
-
+    self.font = font
     self.color = color
-    (self.width, self.height) = self.calculateTextSize(self.content, self.font.family, self.font.size, self.font.weight, self.font.style)
+    (self.width, self.height) = self.calculate_text_size(self.content, self.font)
 
-  def calculateTextSize(self, content, family, size, weight, style):
-    if style == 'normal':
-      style = 'roman'
-    font = tkFont.Font(family=family, size = size, weight = weight, slant = style)
-    (w,h) = (font.measure(content),font.metrics("linespace"))
-    return (w,h/2)
+  def calculate_text_size(self, content, font):
+    if font.style == 'normal':
+      font.style = 'roman'
+    tk_font = tkFont.Font(family=font.family, size=font.size, weight=font.weight, slant=font.style)
+    (w, h) = (tk_font.measure(content), tk_font.metrics("linespace"))
+    return (w, h)
 
   def render(self, svg, x, y):
-    shape_builder = ShapeBuilder()
-    frame = shape_builder.createRect(x, y, self.width, self.height)
-    svg.addElement(frame)
-
-    t = text(self.content, x, y + self.height)
+    t = text(self.content, x, y + self.height * 3 / 4)
     t.set_font_size(self.font.size)
     t.set_font_family(self.font.family)
     t.set_font_style(self.font.style)
     t.set_font_weight(self.font.weight)
     t.set_fill(self.color)
     svg.addElement(t)
+
+class PrettyText(Text):
+  def __init__(self, content, font, color='black'):
+    if content == " ":
+      content = "spacja"
+      font.style = "italic"
+      font.family = "Times New Roman"
+    content = content.replace(" ", u'\u02FD')
+    Text.__init__(self, content, font, color)
+
+class Line(object):
+  def __init__(self, x_diff, y_diff, conf, arrow=False):
+    self.x_diff = x_diff
+    self.y_diff = y_diff
+    self.conf = conf
+    self.arrow = arrow
+
+  def render(self, svg, x, y):
+    stroke_width = self.conf.connection.thickness
+    shape_builder = ShapeBuilder()
+    if self.arrow:
+      l = shape_builder.createLine(x, y, x + self.x_diff - 3 * stroke_width, y + self.y_diff, strokewidth=stroke_width)
+      l._attributes['marker-end'] = 'url(#right-arrow)'
+      svg.addElement(l)
+    else:
+      l = shape_builder.createLine(x, y, x + self.x_diff, y + self.y_diff, strokewidth=stroke_width)
+      svg.addElement(l)
 
 # TODO small, normal, big
 class arrow(g):
@@ -67,8 +82,5 @@ class arrow(g):
     self._attributes['viewBox'] = '0 0 10 10'
     self._attributes['refX'] = '0'
     self._attributes['refY'] = '5'
-    self._attributes['markerUnits'] = 'strokeWidth'
-    self._attributes['markerWidth'] = '5'
-    self._attributes['markerHeight'] = '3'
     self._attributes['orient'] = 'auto'
     self.addElement(path("M 0 0 L 10 5 L 0 10 z"))

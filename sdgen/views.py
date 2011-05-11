@@ -37,7 +37,7 @@ class QuantityAbove(object):
     assert len(data["children"]) == 1
     self.padding = conf.default.padding
     self.content = create_element(data["children"][0], conf)
-    self.text = Text(data["value"], conf.default.font)
+    self.text = Text(data["value"], Font(conf.default.font))
     self.width = self.content.width
     self.height = self.content.height + self.text.height + self.padding
     self.connect_y = self.content.connect_y + self.text.height + self.padding
@@ -48,6 +48,7 @@ class QuantityAbove(object):
 
 class SimpleArrows(object):
   def __init__(self, data, conf):
+    self.conf = conf
     self.width = self.content_width + 20
     self.height = self.content_height
     self.connect_y = self.content_height / 2
@@ -56,16 +57,14 @@ class SimpleArrows(object):
     self.render_content(svg, x + 10, y)
     shape_builder = ShapeBuilder()
 
-    l = shape_builder.createLine(x, y + self.content_height / 2, x + 10 - 9, y + self.content_height / 2, strokewidth = 3)
-    l._attributes['marker-end'] = 'url(#right-arrow)'
-    svg.addElement(l)
+    Line(10, 0, self.conf, arrow=True).render(svg, x, y + self.content_height / 2)
 
-    l = shape_builder.createLine(x + self.content_width + 10, y + self.content_height / 2, x + self.content_width + 20, y + self.content_height / 2, strokewidth = 3)
+    l = shape_builder.createLine(x + self.content_width + 10, y + self.content_height / 2, x + self.content_width + 20, y + self.content_height / 2, strokewidth=self.conf.connection.thickness)
     svg.addElement(l)
 
 class Terminal(SimpleArrows):
   def __init__(self, data, conf):
-    self.text = Text(data["value"], conf.terminal.font)
+    self.text = PrettyText(data["value"], Font(conf.terminal.font))
     self.padding = conf.terminal.padding
     self.content_width = self.text.width + 2 * self.padding
     self.content_height = self.text.height + 2 * self.padding
@@ -73,7 +72,7 @@ class Terminal(SimpleArrows):
 
   def render_content(self, svg, x, y):
     shape_builder = ShapeBuilder()
-    frame = shape_builder.createRect(x, y, self.content_width, self.content_height, self.content_height / 2 - 1, self.content_height / 2 - 1)
+    frame = shape_builder.createRect(x, y, self.content_width, self.content_height, self.content_height / 2 - 1, self.content_height / 2 - 1, strokewidth=self.conf.terminal.thickness)
     svg.addElement(frame)
 
     self.text.render(svg, x + self.padding, y + self.padding)
@@ -83,8 +82,9 @@ class InvTerminal(SimpleArrows):
     self.padding = conf.invterminal.padding
     self.children = []
     self.content_width = self.content_height = 0
+    self.conf = conf
     for raw_child in data['children']:
-      child = Text(raw_child["value"], conf.invterminal.font)
+      child = PrettyText(raw_child["value"], Font(conf.invterminal.font))
       child.color = 'white'
       self.content_width += child.width + 2 * self.padding
       self.content_height = max(self.content_height, child.height)
@@ -94,7 +94,7 @@ class InvTerminal(SimpleArrows):
 
   def render_content(self, svg, x, y):
     shape_builder = ShapeBuilder()
-    frame = shape_builder.createRect(x, y, self.content_width, self.content_height, self.content_height / 2 - 1, self.content_height / 2 - 1, fill = 'black')
+    frame = shape_builder.createRect(x, y, self.content_width, self.content_height, self.content_height / 2 - 1, self.content_height / 2 - 1, fill='black', strokewidth=self.conf.invterminal.thickness)
     svg.addElement(frame)
 
     first = True
@@ -102,7 +102,7 @@ class InvTerminal(SimpleArrows):
       if first:
         first = False
       else:
-        l = shape_builder.createLine(x, y + 3, x, y + self.content_height - 3, stroke = 'white', strokewidth = 2)
+        l = shape_builder.createLine(x, y + 3, x, y + self.content_height - 3, stroke = 'white', strokewidth=self.conf.connection.thickness)
         svg.addElement(l)
 
       child.render(svg, x + self.padding, y + self.padding)
@@ -110,7 +110,7 @@ class InvTerminal(SimpleArrows):
 
 class NonTerminal(SimpleArrows):
   def __init__(self, data, conf):
-    self.text = Text(data["name"], conf.nonterminal.font)
+    self.text = PrettyText(data["name"], Font(conf.nonterminal.font))
     self.padding = conf.nonterminal.padding
     self.data = data
     self.conf = conf
@@ -120,16 +120,15 @@ class NonTerminal(SimpleArrows):
 
   def render_content(self, svg, x, y):
     shape_builder = ShapeBuilder()
-    frame = shape_builder.createRect(x, y, self.content_width, self.content_height)
+    frame = shape_builder.createRect(x, y, self.content_width, self.content_height, 0, strokewidth=self.conf.nonterminal.thickness)
     svg.addElement(frame)
 
     self.text.render(svg, x + self.padding, y + self.padding)
 
-    create_diagram(self.data, self.conf)
-
 class GroupBody(object):
   def __init__(self, data, conf):
     self.padding = conf.group.padding
+    self.conf = conf
     self.content = Sequence(data["children"], conf)
 
     self.content_width = self.content.width
@@ -137,14 +136,15 @@ class GroupBody(object):
     self.height = self.content.height + 2 * self.padding
 
   def render(self, svg, x, y):
+    stroke_width = self.conf.connection.thickness
     x += self.padding
 
     # draw arrows
     shape_builder = ShapeBuilder()
     connect_y = y + self.padding + self.content.connect_y
-    l = shape_builder.createLine(x, connect_y, x + 10, connect_y, strokewidth = 3)
+    l = shape_builder.createLine(x, connect_y, x + 10, connect_y, strokewidth=stroke_width)
     svg.addElement(l)
-    l = shape_builder.createLine(x + self.content_width + 10, connect_y, x + self.content_width + 11, connect_y, strokewidth = 3)
+    l = shape_builder.createLine(x + self.content_width + 10, connect_y, x + self.content_width + 11, connect_y, strokewidth=stroke_width)
     l._attributes['marker-end'] = 'url(#right-arrow)'
     svg.addElement(l)
 
@@ -164,7 +164,7 @@ class Group(SimpleArrows):
     self.content_height = 0
 
     # create header
-    self.header_text = Text(data["name"], conf.group.name.font, 'white', raw=True)
+    self.header_text = Text(data["name"], Font(conf.group.name.font), 'white')
     self.header_width = self.header_text.width + 2 * self.padding
     self.header_height = self.header_text.height + 2 * self.padding
 
@@ -178,10 +178,10 @@ class Group(SimpleArrows):
 
   def render_frame(self, svg, x, y):
     shape_builder = ShapeBuilder()
-    frame = shape_builder.createRect(x, y, self.content_width, self.content_height)
+    frame = shape_builder.createRect(x, y, self.content_width, self.content_height, strokewidth=self.conf.group.thickness)
     svg.addElement(frame)
 
-    header_box = shape_builder.createRect(x, y, self.header_width, self.header_height, fill = 'black')
+    header_box = shape_builder.createRect(x, y, self.header_width, self.header_height, fill='black', strokewidth=self.conf.group.thickness)
     svg.addElement(header_box)
 
     self.header_text.render(svg, x + self.header_padding, y + self.header_padding)
@@ -216,6 +216,7 @@ class Sequence(object):
 
 class Alternation(object):
   def __init__(self, data, conf):
+    self.conf = conf
     self.padding = conf.alternation.padding
     self.children = []
     for raw_child in data['children']:
@@ -231,6 +232,7 @@ class Alternation(object):
     self.connect_y = self.height / 2
 
   def render(self, svg, x, y):
+    stroke_width = self.conf.connection.thickness
     shape_builder = ShapeBuilder()
     start_x = x
     start_y = y + self.connect_y
@@ -240,23 +242,26 @@ class Alternation(object):
     for child in self.children:
       child.render(svg, x, y)
 
-      l = shape_builder.createLine(x + child.width, y + child.connect_y, x + self.content_width, y + child.connect_y, strokewidth = 3)
+      l = shape_builder.createLine(x + child.width, y + child.connect_y, x + self.content_width, y + child.connect_y, strokewidth=stroke_width)
       svg.addElement(l)
       path_data = "m {0},{1} c {2},0 0,{3} {2},{3}".format(start_x, start_y, 20, y + child.connect_y - start_y)
-      svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width = 3))
+      svg.addElement(path(path_data, stroke = "black", fill="none", stroke_width=stroke_width))
       path_data = "m {0},{1} c {2},0 0,{3} {2},{3}".format(end_x, y + child.connect_y, 20, start_y - (y + child.connect_y))
-      svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width = 3))
+      svg.addElement(path(path_data, stroke = "black", fill="none", stroke_width=stroke_width))
 
       y += child.height + self.padding
 
 class Detour(object):
   def __init__(self, data, conf):
+    self.conf = conf
     self.content = Sequence(data["children"], conf)
     self.width = self.content.width + 40
     self.height = self.content.height + 20
     self.connect_y = self.content.height / 2
 
   def render(self, svg, x, y):
+    stroke_width = self.conf.connection.thickness
+
     shape_builder = ShapeBuilder()
     connect_y = y + self.connect_y
     bottom_y = y + self.content.height + 10
@@ -264,22 +269,23 @@ class Detour(object):
     self.content.render(svg, x + 20, y)
 
     path_data = "m {0},{1} c 10,0 10,{3} {2},{3}".format(x, connect_y, 20, bottom_y - connect_y)
-    svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width = 3))
+    svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width=stroke_width))
     path_data = "m {0},{1} c 10,0 10,{3} {2},{3}".format(x + 20 + self.content.width, bottom_y, 20, connect_y - bottom_y)
-    svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width = 3))
+    svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width=stroke_width))
 
-    l = shape_builder.createLine(x + 20 + self.content.width / 2, bottom_y, x + 20 + self.content.width / 2, bottom_y, strokewidth = 3)
+    l = shape_builder.createLine(x + 20 + self.content.width / 2, bottom_y, x + 20 + self.content.width / 2, bottom_y, strokewidth=stroke_width)
     l._attributes['marker-end'] = 'url(#right-arrow)'
     svg.addElement(l)
-    l = shape_builder.createLine(x + 20, bottom_y, x + 20 + self.content.width, bottom_y, strokewidth = 3)
+    l = shape_builder.createLine(x + 20, bottom_y, x + 20 + self.content.width, bottom_y, strokewidth=stroke_width)
     svg.addElement(l)
-    l = shape_builder.createLine(x, connect_y, x + 20, connect_y, strokewidth = 3)
+    l = shape_builder.createLine(x, connect_y, x + 20, connect_y, strokewidth=stroke_width)
     svg.addElement(l)
-    l = shape_builder.createLine(x + 20 + self.content.width, connect_y, x + 20 + self.content.width + 20, connect_y, strokewidth = 3)
+    l = shape_builder.createLine(x + 20 + self.content.width, connect_y, x + 20 + self.content.width + 20, connect_y, strokewidth=stroke_width)
     svg.addElement(l)
 
 class Return(object):
   def __init__(self, data, conf):
+    self.conf = conf
     self.content = Sequence(data["children"], conf)
     self.width = self.content.width + 40
     self.height = self.content.height + 20
@@ -288,20 +294,21 @@ class Return(object):
   def render(self, svg, x, y):
     self.content.render(svg, x + 20, y + 20)
 
+    stroke_width = self.conf.connection.thickness
+
     connect_y = y + self.connect_y
     above_y = connect_y - self.content.height_above - 10
     path_data = "m {0},{1} c -10,0 -10,{3} 0,{3}".format(x + 20, connect_y, 20, above_y - connect_y)
-    svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width = 3))
+    svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width=stroke_width))
     path_data = "m {0},{1} c 10,0 10,{3} 0,{3}".format(x + 20 + self.content.width, above_y, 20, connect_y - above_y)
-    svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width = 3))
-
+    svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width=stroke_width))
     shape_builder = ShapeBuilder()
-    l = shape_builder.createLine(x + 20 + self.content.width / 2, above_y, x + 19 + self.content.width / 2, above_y, strokewidth = 3)
+    l = shape_builder.createLine(x + 20 + self.content.width / 2, above_y, x + 19 + self.content.width / 2, above_y, strokewidth=stroke_width)
     l._attributes['marker-end'] = 'url(#right-arrow)'
     svg.addElement(l)
-    l = shape_builder.createLine(x + 20, above_y, x + 20 + self.content.width, above_y, strokewidth = 3)
+    l = shape_builder.createLine(x + 20, above_y, x + 20 + self.content.width, above_y, strokewidth=stroke_width)
     svg.addElement(l)
-    l = shape_builder.createLine(x, connect_y, x + 20, connect_y, strokewidth = 3)
+    l = shape_builder.createLine(x, connect_y, x + 20, connect_y, strokewidth=stroke_width)
     svg.addElement(l)
-    l = shape_builder.createLine(x + 20 + self.content.width, connect_y, x + 20 + self.content.width + 20, connect_y, strokewidth = 3)
+    l = shape_builder.createLine(x + 20 + self.content.width, connect_y, x + 20 + self.content.width + 20, connect_y, strokewidth=stroke_width)
     svg.addElement(l)

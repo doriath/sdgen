@@ -9,14 +9,14 @@ data = {
     {
       "children":
       [
-          {"value": "w w", "view": "Terminal"}
+          {"value": "y w", "view": "Terminal"}
       ],
       "view": "Return"
     },
     {
       "children":
       [
-	{"value": "wwwww", "view": "Terminal"},
+	{"value": "piotr", "view": "Terminal"},
 	{"value": " ", "view": "Terminal"}
       ],
       "view": "Detour"
@@ -99,14 +99,7 @@ data = {
                             {
                               "children":
                               [
-                                {
-                                  "children":
-                                  [
-                                    {"value": "wwwww", "view": "Terminal"},
-                                    {"value": "i", "view": "Terminal"}
-                                  ],
-                                  "view": "Sequence"
-                                }
+                                {"value": "wwwww", "view": "Terminal"},
                               ],
                               "value": "5..",
                               "view": "QuantityAbove"

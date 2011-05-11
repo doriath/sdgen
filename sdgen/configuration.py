@@ -29,12 +29,12 @@ class Configuration(object):
     if conf == None:
       conf = {}
 
-    self.default = Bunch(thickness=1, padding=10, font=Bunch(name="Courier", size=16, typeface="bold"))
+    self.default = Bunch(thickness=2, padding=10, font=Bunch(name="Courier New", size=16, typeface="bold"))
     if "default" in conf:
       self.default.merge(Bunch(**conf["default"]))
 
     self.group = self.default.copy()
-    self.group.name = Bunch(padding=10, font=Bunch(name="Times", size=12, typeface="bold italic"))
+    self.group.name = Bunch(padding=10, font=Bunch(name="Times New Roman", size=16, typeface="bold italic"))
     if "group" in conf:
       self.group.merge(Bunch(**conf["group"]))
 
@@ -43,7 +43,7 @@ class Configuration(object):
       self.terminal.merge(Bunch(**conf["terminal"]))
 
     self.nonterminal = self.default.copy()
-    self.nonterminal.font = Bunch(name="Times", size=16, typeface="bold italic")
+    self.nonterminal.font = Bunch(name="Times New Roman", size=16, typeface="bold italic")
     if "nonterminal" in conf:
       self.nonterminal.merge(Bunch(**conf["nonterminal"]))
 
@@ -55,6 +55,6 @@ class Configuration(object):
     if "alternation" in conf:
       self.alternation.merge(Bunch(**conf["alternation"]))
 
-    self.connection = Bunch(thickness=1, marker="normal")
+    self.connection = Bunch(thickness=2, marker="normal")
     if "connection" in conf:
       self.connection.merge(Bunch(**conf["connection"]))
