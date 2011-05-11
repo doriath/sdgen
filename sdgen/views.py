@@ -68,6 +68,7 @@ class Terminal(SimpleArrows):
     self.padding = conf.terminal.padding
     self.content_width = self.text.width + 2 * self.padding
     self.content_height = self.text.height + 2 * self.padding
+    self.content_width = max(self.content_width, self.content_height)
     SimpleArrows.__init__(self, data, conf)
 
   def render_content(self, svg, x, y):
@@ -75,6 +76,7 @@ class Terminal(SimpleArrows):
     frame = shape_builder.createRect(x, y, self.content_width, self.content_height, self.content_height / 2 - 1, self.content_height / 2 - 1, strokewidth=self.conf.terminal.thickness)
     svg.addElement(frame)
 
+    x += max(1, (self.content_width - self.text.width - 2 * self.padding) / 2)
     self.text.render(svg, x + self.padding, y + self.padding)
 
 class InvTerminal(SimpleArrows):

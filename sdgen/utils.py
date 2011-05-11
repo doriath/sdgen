@@ -67,7 +67,7 @@ class Line(object):
     stroke_width = self.conf.connection.thickness
     shape_builder = ShapeBuilder()
     if self.arrow:
-      l = shape_builder.createLine(x, y, x + self.x_diff - 3 * stroke_width, y + self.y_diff, strokewidth=stroke_width)
+      l = shape_builder.createLine(x, y, x + self.x_diff - 5 * stroke_width, y + self.y_diff, strokewidth=stroke_width)
       l._attributes['marker-end'] = 'url(#right-arrow)'
       svg.addElement(l)
     else:
@@ -79,8 +79,10 @@ class arrow(g):
   def __init__(self):
     BaseElement.__init__(self, 'marker')
     self._attributes['id'] = 'right-arrow'
-    self._attributes['viewBox'] = '0 0 10 10'
+    self._attributes['viewBox'] = '0 0 20 20'
     self._attributes['refX'] = '0'
-    self._attributes['refY'] = '5'
+    self._attributes['refY'] = '10'
     self._attributes['orient'] = 'auto'
-    self.addElement(path("M 0 0 L 10 5 L 0 10 z"))
+    self._attributes['markerWidth'] = '5'
+    self._attributes['markerHeight'] = '10'
+    self.addElement(path("M 0 0 L 20 10 L 0 20 z"))

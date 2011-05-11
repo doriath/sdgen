@@ -29,12 +29,12 @@ class Configuration(object):
     if conf == None:
       conf = {}
 
-    self.default = Bunch(thickness=2, padding=10, font=Bunch(name="Courier New", size=16, typeface="bold"))
+    self.default = Bunch(thickness=2, padding=5, font=Bunch(name="Courier New", size=16, typeface="bold"))
     if "default" in conf:
       self.default.merge(Bunch(**conf["default"]))
 
     self.group = self.default.copy()
-    self.group.name = Bunch(padding=10, font=Bunch(name="Times New Roman", size=16, typeface="bold italic"))
+    self.group.name = Bunch(padding=5, font=Bunch(name="Times New Roman", size=16, typeface="bold italic"))
     if "group" in conf:
       self.group.merge(Bunch(**conf["group"]))
 
