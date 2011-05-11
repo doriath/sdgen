@@ -164,7 +164,7 @@ class Group(SimpleArrows):
     self.content_height = 0
 
     # create header
-    self.header_text = Text(data["name"], conf.group.name.font, 'white')
+    self.header_text = Text(data["name"], conf.group.name.font, 'white', raw=True)
     self.header_width = self.header_text.width + 2 * self.padding
     self.header_height = self.header_text.height + 2 * self.padding
 
@@ -217,7 +217,6 @@ class Sequence(object):
 class Alternation(object):
   def __init__(self, data, conf):
     self.padding = conf.alternation.padding
-    # TODO handle more children
     self.children = []
     for raw_child in data['children']:
       self.children.append(create_element(raw_child, conf))
@@ -225,9 +224,9 @@ class Alternation(object):
     self.height = 0
     self.content_width = 0
     for child in self.children:
-      self.height += child.height
+      self.height += child.height + self.padding
       self.content_width = max(self.content_width, child.width)
-    self.height += self.padding
+    self.height -= self.padding
     self.width = self.content_width + 40
     self.connect_y = self.height / 2
 

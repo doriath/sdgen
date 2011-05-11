@@ -66,32 +66,53 @@ data = {
             {
               "children":
               [
-                {"value": "wwwww", "view": "Terminal"},
-                {"value": "i", "view": "Terminal"}
-              ],
-              "view": "Sequence"
-            },
-            {
-              "value": "tomek",
-              "view": "Terminal"
-            },
-            {
-              "children":
-              [
-                {"value": "i", "view": "Terminal"},
                 {
                   "children":
                   [
+                    {"value": "wwwww", "view": "Terminal"},
+                    {"value": "i", "view": "Terminal"}
+                  ],
+                  "view": "Sequence"
+                },
+                {
+                  "value": "tomek",
+                  "view": "Terminal"
+                },
+                {
+                  "children":
+                  [
+                    {"value": "i", "view": "Terminal"},
                     {
                       "children":
                       [
                         {
                           "children":
                           [
-                            {"value": u"wwąww", "view": "Terminal"},
-                            {"value": "i", "view": "Terminal"}
+                            {
+                              "children":
+                              [
+                                {"value": u"wwąww", "view": "Terminal"},
+                                {"value": "i", "view": "Terminal"}
+                              ],
+                              "view": "Detour"
+                            },
+                            {
+                              "children":
+                              [
+                                {
+                                  "children":
+                                  [
+                                    {"value": "wwwww", "view": "Terminal"},
+                                    {"value": "i", "view": "Terminal"}
+                                  ],
+                                  "view": "Sequence"
+                                }
+                              ],
+                              "value": "5..",
+                              "view": "QuantityAbove"
+                            },
                           ],
-                          "view": "Detour"
+                          "view": "Sequence"
                         },
                         {
                           "children":
@@ -99,45 +120,30 @@ data = {
                             {
                               "children":
                               [
-                                {"value": "wwwww", "view": "Terminal"},
                                 {"value": "i", "view": "Terminal"}
                               ],
-                              "view": "Sequence"
+                              "value": "5..10",
+                              "view": "QuantityAbove"
                             }
                           ],
-                          "value": "5..",
-                          "view": "QuantityAbove"
-                        },
-                      ],
-                      "view": "Sequence"
-                    },
-                    {
-                      "children":
-                      [
-                        {
-                          "children":
-                          [
-                            {"value": "i", "view": "Terminal"}
-                          ],
-                          "value": "5..10",
-                          "view": "QuantityAbove"
+                          "view": "Sequence"
                         }
                       ],
-                      "view": "Sequence"
+                      "name": None,
+                      "view": "Alternation"
                     }
                   ],
-                  "name": None,
-                  "view": "Alternation"
+                  "view": "Sequence"
                 }
               ],
-              "view": "Sequence"
+              "name": None,
+              "view": "Alternation"
             }
           ],
-          "name": None,
-          "view": "Alternation"
+          "view": "Detour"
         }
       ],
-      "view": "Detour"
+      "view": "Return"
     }
   ],
   "name": u"Grupa początkowa",

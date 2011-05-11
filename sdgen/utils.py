@@ -23,12 +23,12 @@ class Text(object):
     self.content = content
     self.font = Font(font)
 
-    if self.content == " ":
-      self.content = "spacja"
-      self.font.style = "italic"
-      self.font.family = "Times"
-
-    self.content = self.content.replace(" ", u'\u02FD')
+    if not raw:
+      if self.content == " ":
+        self.content = "spacja"
+        self.font.style = "italic"
+        self.font.family = "Times"
+      self.content = self.content.replace(" ", u'\u02FD')
 
     self.color = color
     self.width = len(self.content) * 10
