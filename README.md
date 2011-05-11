@@ -34,10 +34,7 @@ Then, generate simple diagram for IP grammar:
 Authors
 -------
 
-Tomasz Zurkowski
-Piotr Slatala
-Marek Kuzora
-Anna Fenster
+Tomasz Zurkowski, Piotr Slatala, Marek Kuzora, Anna Fenster
 
 Licence
 -------
