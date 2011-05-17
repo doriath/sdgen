@@ -142,5 +142,12 @@ data = {
   "view": "Group"
 }
 
-result = as_svg(data)
+conf = {
+  'connection': {
+    'thickness': 2,
+    'marker': 'small'
+  }
+}
+
+result = as_svg(data, None, conf)
 print result[0][1].encode('utf-8')

@@ -67,22 +67,33 @@ class Line(object):
     stroke_width = self.conf.connection.thickness
     shape_builder = ShapeBuilder()
     if self.arrow:
-      l = shape_builder.createLine(x, y, x + self.x_diff - 5 * stroke_width, y + self.y_diff, strokewidth=stroke_width)
-      l._attributes['marker-end'] = 'url(#right-arrow)'
+      l = shape_builder.createLine(x, y, x + self.x_diff - self.arrow_width() * stroke_width, y + self.y_diff, strokewidth=stroke_width)
+      l._attributes['marker-end'] = "url(#{0}-right-arrow)".format(self.conf.connection.marker)
       svg.addElement(l)
     else:
       l = shape_builder.createLine(x, y, x + self.x_diff, y + self.y_diff, strokewidth=stroke_width)
       svg.addElement(l)
 
+  def arrow_width(self):
+    if self.conf.connection.marker == "small":
+      return 3
+    if self.conf.connection.marker == "normal":
+      return 5
+    if self.conf.connection.marker == "large":
+      return 7
+
+
 # TODO small, normal, big
-class arrow(g):
-  def __init__(self):
+class Arrow(g):
+  def __init__(self, name='right-arrow', width=5):
+    self.width = width
+
     BaseElement.__init__(self, 'marker')
-    self._attributes['id'] = 'right-arrow'
+    self._attributes['id'] = name
     self._attributes['viewBox'] = '0 0 20 20'
     self._attributes['refX'] = '0'
     self._attributes['refY'] = '10'
     self._attributes['orient'] = 'auto'
-    self._attributes['markerWidth'] = '5'
-    self._attributes['markerHeight'] = '10'
+    self._attributes['markerWidth'] = width
+    self._attributes['markerHeight'] = 2 * width
     self.addElement(path("M 0 0 L 20 10 L 0 20 z"))
