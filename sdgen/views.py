@@ -270,9 +270,7 @@ class Detour(object):
     path_data = "m {0},{1} c 10,0 10,{3} {2},{3}".format(x + 20 + self.content.width, bottom_y, 20, connect_y - bottom_y)
     svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width=stroke_width))
 
-    l = shape_builder.createLine(x + 20 + self.content.width / 2, bottom_y, x + 20 + self.content.width / 2, bottom_y, strokewidth=stroke_width)
-    l._attributes['marker-end'] = 'url(#right-arrow)'
-    svg.addElement(l)
+    Line(10, 0, self.conf, arrow=True).render(svg, x + 20 + self.content.width / 2, bottom_y)
     l = shape_builder.createLine(x + 20, bottom_y, x + 20 + self.content.width, bottom_y, strokewidth=stroke_width)
     svg.addElement(l)
     l = shape_builder.createLine(x, connect_y, x + 20, connect_y, strokewidth=stroke_width)
@@ -300,9 +298,7 @@ class Return(object):
     path_data = "m {0},{1} c 10,0 10,{3} 0,{3}".format(x + 20 + self.content.width, above_y, 20, connect_y - above_y)
     svg.addElement(path(path_data, stroke = "black", fill = "none", stroke_width=stroke_width))
     shape_builder = ShapeBuilder()
-    l = shape_builder.createLine(x + 20 + self.content.width / 2, above_y, x + 19 + self.content.width / 2, above_y, strokewidth=stroke_width)
-    l._attributes['marker-end'] = 'url(#right-arrow)'
-    svg.addElement(l)
+    Line(0, 0, self.conf, arrow=True).render(svg, x + 25 + self.content.width / 2, above_y)
     l = shape_builder.createLine(x + 20, above_y, x + 20 + self.content.width, above_y, strokewidth=stroke_width)
     svg.addElement(l)
     l = shape_builder.createLine(x, connect_y, x + 20, connect_y, strokewidth=stroke_width)
