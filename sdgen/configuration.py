@@ -33,9 +33,10 @@ class Configuration(object):
     if "default" in conf:
       self.default.merge(Bunch(**conf["default"]))
 
-    self.group = self.default.copy()
+    self.group = Bunch()
     self.group.padding = 10
     self.group.name = Bunch(padding=5, font=Bunch(name="Times New Roman", size=16, typeface="bold italic"))
+    self.group.merge(self.default.copy())
     if "group" in conf:
       self.group.merge(Bunch(**conf["group"]))
 

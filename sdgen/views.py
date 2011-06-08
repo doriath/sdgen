@@ -2,26 +2,23 @@
 from pysvg.builders import *
 from sdgen.utils import *
 
-def create_element(data, conf):
-  if data["view"] == "Group":
-    return Group(data, conf)
-  if data["view"] == "Terminal":
-    return Terminal(data, conf)
-  if data["view"] == "InvTerminal":
-    return InvTerminal(data, conf)
-  if data["view"] == "NonTerminal":
-    return NonTerminal(data, conf)
-  if data["view"] == "Alternation":
-    return Alternation(data, conf)
-  if data["view"] == "Detour":
-    return Detour(data, conf)
-  if data["view"] == "Return":
-    return Return(data, conf)
-  if data["view"] == "QuantityAbove":
-    return QuantityAbove(data, conf)
-  if data["view"] == "Sequence":
-    return Sequence(data, conf)
-  raise ValueError("Unknow view: " + data['view'])
+
+class ElementCreator(object):
+  def __init__(self):
+    self.__elements_creators = {
+      "Group": Group,
+      "Terminal": Terminal,
+      "InvTerminal": InvTerminal,
+      "NonTerminal": NonTerminal,
+      "Alternation": Alternation,
+      "Detour": Detour,
+      "Return": Return,
+      "QuantityAbove": QuantityAbove,
+      "Sequence": Sequence
+    }
+
+  def create(self, data, conf):
+    return self.__elements_creators[data["view"]](data, conf)
 
 def create_diagram(data, conf):
   diagram = Group(data, conf)
@@ -37,7 +34,7 @@ def create_diagram(data, conf):
 class QuantityAbove(object):
   def __init__(self, data, conf):
     assert len(data["children"]) == 1
-    self.content = create_element(data["children"][0], conf)
+    self.content = ElementCreator().create(data["children"][0], conf)
     self.text = Text(data["value"], Font(conf.default.font))
     self.width = self.content.width
     self.height = self.content.height + self.text.height
@@ -193,7 +190,7 @@ class Sequence(object):
     if isinstance(data, dict):
       raw_children = data["children"]
     for raw_child in raw_children:
-      child = create_element(raw_child, conf)
+      child = ElementCreator().create(raw_child, conf)
       self.width += child.width
       self.height_above = max(self.height_above, child.connect_y)
       self.height_below = max(self.height_below, child.height - child.connect_y)
@@ -217,7 +214,7 @@ class Alternation(object):
     self.padding = conf.alternation.padding
     self.children = []
     for raw_child in data['children']:
-      self.children.append(create_element(raw_child, conf))
+      self.children.append(ElementCreator().create(raw_child, conf))
 
     self.height = 0
     self.content_width = 0

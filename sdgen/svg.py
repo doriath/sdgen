@@ -26,7 +26,7 @@ def as_svg(data, path=None, conf=None):
   views_to_render.extend(find_non_terminals(data))
   result = []
   for view in views_to_render:
-    result.append((view["name"], create_diagram(data, Configuration(conf))))
+    result.append((view["name"], create_diagram(view, Configuration(conf))))
 
   if path != None:
     for image in result:

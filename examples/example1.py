@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 sys.path.append('.')
-from sdgen.svg import *
+from sdgen import *
 
 data = {
   "children":
@@ -143,11 +143,35 @@ data = {
 }
 
 conf = {
+  'default': {
+    'thickness': 2,
+    'padding': 10,
+    'font': {
+      'name': 'Courier',
+      'size': 12,
+      'typeface': 'bold',
+    },
+    'name': {
+      'padding': 10,
+        'font': {
+          'name': 'Times',
+          'size': 12,
+          'typeface': 'bold italic',
+        },
+    },
+  },
+  'nonterminal': {
+    'font': {
+      'name': 'Times',
+      'size': 12,
+      'typeface': 'bold italic',
+    },
+  },
   'connection': {
     'thickness': 2,
-    'marker': 'small'
-  }
+    'marker': 'normal',
+  },
 }
 
-result = as_svg(data, None, conf)
+result = as_svg(data, None)
 print result[0][1].encode('utf-8')
