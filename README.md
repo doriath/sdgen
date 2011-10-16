@@ -36,6 +36,8 @@ Authors
 
 Tomasz Zurkowski, Piotr Slatala, Marek Kuzora, Anna Fenster
 
+Idea & Specification of graph view & requirements invented and specified by Bartosz Alchimowicz.
+
 Licence
 -------
 
